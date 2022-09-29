@@ -14,6 +14,20 @@ const getWorkoutPlanById = async (id, token) => {
   return res.data;
 };
 
+const updateWorkoutPlan = async (data, id, token) => {
+  const res = await axios.put(
+    `${baseUrl}/${id}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 const createWorkoutPlan = async (data, token) => {
   const res = await axios.post(
     `${baseUrl}`,
@@ -28,4 +42,4 @@ const createWorkoutPlan = async (data, token) => {
   return res.data;
 };
 
-export default { getWorkoutPlanById, createWorkoutPlan };
+export default { getWorkoutPlanById, createWorkoutPlan, updateWorkoutPlan };
