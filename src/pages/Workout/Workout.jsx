@@ -80,7 +80,6 @@ const Workout = () => {
             setFormData={setFormData}
             options={options}
             step={step}
-            token={token}
             id={id}
             timesPerWeek={formData.timesPerWeek}
           />

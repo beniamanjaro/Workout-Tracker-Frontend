@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import FieldArray from "./FieldArray";
 import { yupResolver } from "@hookform/resolvers/yup";
 import workoutPlansService from "../../services/workoutPlans";
 import * as yup from "yup";
+import { AuthContext } from "../../context/AuthContext";
 
 const schema = yup
   .object({
@@ -31,7 +32,6 @@ const CreateWorkoutForm = ({
   step,
   userDetails,
   setUserDetails,
-  token,
   timesPerWeek,
 }) => {
   const defaultValues = {
@@ -39,12 +39,15 @@ const CreateWorkoutForm = ({
   };
 
   const {
+    user: { token },
+  } = useContext(AuthContext);
+
+  const {
     control,
     register,
     handleSubmit,
     getValues,
     formState: { errors },
-    reset,
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
