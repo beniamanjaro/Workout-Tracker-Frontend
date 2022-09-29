@@ -52,7 +52,6 @@ const CreateWorkoutForm = ({
   });
 
   const onSubmit = (data) => {
-    console.log(data);
     const workoutSetsForApi = data.routines.map((r) => {
       let workoutSets2 = [];
       r.exercises.map((e) => {
@@ -68,7 +67,7 @@ const CreateWorkoutForm = ({
         workoutSets: workoutSets2,
       };
     });
-    console.log(workoutSetsForApi);
+
     handleCreateWorkoutPlan(workoutSetsForApi);
     setCreateWorkoutFormActive(false);
     setFormData({
@@ -85,7 +84,6 @@ const CreateWorkoutForm = ({
   };
 
   const handleCreateWorkoutPlan = async (workoutSetsForApi) => {
-    console.log(formData);
     const workout = await workoutPlansService.createWorkoutPlan(
       { ...formData, routines: workoutSetsForApi },
       token
@@ -95,7 +93,6 @@ const CreateWorkoutForm = ({
       ...userDetails,
       workoutPlans,
     });
-    console.log("userDetails after workout created", userDetails);
   };
 
   return (
@@ -112,10 +109,6 @@ const CreateWorkoutForm = ({
           options={options}
           timesPerWeek={timesPerWeek}
         />
-
-        <button type="button" onClick={() => reset(defaultValues)}>
-          Reset
-        </button>
 
         <div className="flex">
           <button
