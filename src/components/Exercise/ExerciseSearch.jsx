@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import exercisesService from "../../services/exercises";
 
 const ExerciseSearch = ({

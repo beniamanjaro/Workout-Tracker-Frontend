@@ -1,7 +1,5 @@
-import React from "react";
 import { useFieldArray } from "react-hook-form";
 import Select from "react-select";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 import { Controller } from "react-hook-form";
 import { useEffect } from "react";
 
@@ -18,10 +16,12 @@ const NestedFieldArray = ({
   });
 
   useEffect(() => {
-    append({
-      name: "",
-      sets: "",
-    });
+    if (fields.length === 0) {
+      append({
+        name: "",
+        sets: "",
+      });
+    }
   }, []);
 
   return (
@@ -42,7 +42,7 @@ const NestedFieldArray = ({
                 render={({ field: { onChange, value, ref } }) => (
                   <Select
                     className={
-                      errors.routines &&
+                      errors?.routines &&
                       errors?.routines[nestIndex]?.exercises[k]?.name
                         ? "whitespace-nowrap w-[20vw] border-red-500 border rounded-lg outline-none"
                         : "whitespace-nowrap w-[20vw] border-black border rounded-lg outline-none"
@@ -55,11 +55,11 @@ const NestedFieldArray = ({
                 )}
               />
 
-              <div class="relative z-0">
+              <div className="relative z-0">
                 <input
                   type="text"
                   className={
-                    errors.routines &&
+                    errors?.routines &&
                     errors?.routines[nestIndex]?.exercises[k]?.sets
                       ? "block py-2.5 px-0 md:min-w-[20vw] w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-red-300 appearance-none dark:text-white dark:border-red-600 dark:focus:border-red-500 focus:outline-none focus:ring-0 focus:border-red-600 peer"
                       : "block py-2.5 px-0 md:min-w-[20vw] text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -68,13 +68,13 @@ const NestedFieldArray = ({
                   {...register(`routines[${nestIndex}].exercises[${k}].sets`)}
                   defaultValue={item.sets}
                 />
-                {errors.routines &&
+                {errors?.routines &&
                 errors?.routines[nestIndex]?.exercises[k]?.sets ? (
                   <p role="alert">The Field is required</p>
                 ) : (
                   ""
                 )}
-                <label class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                <label className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Sets
                 </label>
               </div>
@@ -100,7 +100,6 @@ const NestedFieldArray = ({
           })
         }
       >
-        {/* <AiOutlinePlusCircle className="text-white bg-green-600 hover:bg-white hover:text-green-600 active:scale-95 duration-150 ease-in rounded-full w-12 h-12" /> */}
         Add Exercise
       </button>
 

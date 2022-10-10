@@ -14,4 +14,31 @@ const getUserById = async (id, token) => {
   return res.data;
 };
 
-export default { getUserById };
+const getHistoryByTimeframe = async (userId, timeframe, token) => {
+  const res = await axios.get(
+    `${baseUrl}/${userId}/history?timeframeInMonths=${timeframe}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
+const subscribeToWorkoutPlan = async (userId, workoutPlanId, token) => {
+  const res = await axios.put(
+    `${baseUrl}/${userId}/workout-plans?workoutPlanId=${workoutPlanId}`,
+    "",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
+export default { getUserById, subscribeToWorkoutPlan, getHistoryByTimeframe };

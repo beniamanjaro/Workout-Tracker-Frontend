@@ -14,6 +14,45 @@ const getWorkoutPlanById = async (id, token) => {
   return res.data;
 };
 
+const getTopUsersForWorkoutPlanById = async (id, token) => {
+  const res = await axios.get(
+    `${baseUrl}/${id}/top-users`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
+const getWorkoutPlanMuscleSplitStats = async (id, token) => {
+  const res = await axios.get(
+    `${baseUrl}/${id}/muscle-split`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
+const deleteWorkoutPlanById = async (id, token) => {
+  const res = await axios.delete(
+    `${baseUrl}/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 const updateWorkoutPlan = async (data, id, token) => {
   const res = await axios.put(
     `${baseUrl}/${id}`,
@@ -42,4 +81,11 @@ const createWorkoutPlan = async (data, token) => {
   return res.data;
 };
 
-export default { getWorkoutPlanById, createWorkoutPlan, updateWorkoutPlan };
+export default {
+  getWorkoutPlanById,
+  createWorkoutPlan,
+  updateWorkoutPlan,
+  deleteWorkoutPlanById,
+  getWorkoutPlanMuscleSplitStats,
+  getTopUsersForWorkoutPlanById,
+};

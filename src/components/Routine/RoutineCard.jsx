@@ -1,8 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const RoutineCard = ({ name, dayOrder, exercises }) => {
-  console.log(exercises);
   return (
     <div className="flex flex-col">
       <table className="bg-white h-24">
@@ -25,7 +23,7 @@ const RoutineCard = ({ name, dayOrder, exercises }) => {
           </tr>
         </thead>
       </table>
-      <table className="bg-white h-12">
+      <table className="bg-white h-12 w-full">
         <tr>
           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Exercise Name
@@ -39,8 +37,8 @@ const RoutineCard = ({ name, dayOrder, exercises }) => {
         </tr>
         {exercises?.map((s) => (
           <tr key={s.id} className="">
-            <td className="px-6 h-12  md:whitespace-nowrap">
-              <div className="flex items-center overflow-hidden">
+            <td className="px-6 h-12">
+              <div className="flex items-center justify-start overflow-hidden">
                 <img
                   className="h-12 w-12 rounded-full"
                   alt={`exercise ${s.exercise?.name} gif`}

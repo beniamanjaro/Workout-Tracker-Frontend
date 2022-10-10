@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import orkLogo from "../../orc-icon-24.jpg";
 import arrow from "../../Untitled2.png";

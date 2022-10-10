@@ -8,6 +8,14 @@
 //   addExesToDb();
 // }
 
+//   user: { token },
+// } = useContext(AuthContext);
+
+// useEffect(() => {
+//   const {
+//     user: { userId, token },
+// } = useContext(AuthContext);
+
 // useEffect(() => {
 //   const getExer = async () => {
 //     const exs = await exercisesService.getApiExercises();
@@ -16,13 +24,14 @@
 //         name: item.name,
 //         category: item.bodyPart,
 //         equipment: item.equipment,
-//         GifLink: item.gifUrl,
+//         gifLink: item.gifUrl,
+//         muscle: item.target,
 //       };
 //     });
 //     await exercisesService.addExercisesBulk(changedExers, token);
 //     console.log("useeffect triggered");
 //     console.log(changedExers);
-//     // setExercises(exs);
+//     setExercises(exs);
 //   };
 //   getExer();
 // }, []);

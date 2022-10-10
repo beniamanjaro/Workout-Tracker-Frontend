@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   LOGIN_FAIL,
@@ -13,7 +13,6 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const { user, dispatch } = useContext(AuthContext);
   const navigator = useNavigate();
-  console.log(user);
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);

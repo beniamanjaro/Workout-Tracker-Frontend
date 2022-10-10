@@ -1,7 +1,6 @@
-import React, { useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Body from "../../components/Body/Body";
-import CategoriesSlider from "../../components/Exercise/CategoriesSlider";
 import { AuthContext } from "../../context/AuthContext.js";
 
 const Home = () => {

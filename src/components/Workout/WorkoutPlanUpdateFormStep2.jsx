@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import workoutPlansService from "../../services/workoutPlans";
 import * as yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const schema = yup
   .object({
@@ -30,9 +31,9 @@ const CreateWorkoutForm = ({
   options,
   setStep,
   step,
-  userDetails,
-  setUserDetails,
   timesPerWeek,
+  id,
+  setWorkoutPlanDetails,
 }) => {
   const defaultValues = {
     routines: formData.routines,
@@ -48,6 +49,7 @@ const CreateWorkoutForm = ({
     handleSubmit,
     getValues,
     formState: { errors },
+    reset,
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
@@ -55,24 +57,25 @@ const CreateWorkoutForm = ({
   });
 
   const onSubmit = (data) => {
-    const workoutSetsForApi = data.routines.map((r) => {
-      let workoutSets2 = [];
+    const routinesForApi = data.routines.map((r) => {
+      let workoutSetsTemp = [];
       r.exercises.map((e) => {
         let sets = [];
         for (let i = 0; i < e.sets; i++) {
           sets.push({ exerciseId: e.name, numberOfReps: 0, weight: 0 });
         }
-        return workoutSets2.push({ sets });
+        return workoutSetsTemp.push({ sets });
       });
       return {
         name: r.name,
         dayOrderNumber: r.dayOrderNumber,
-        workoutSets: workoutSets2,
+        workoutSets: workoutSetsTemp,
       };
     });
 
-    handleCreateWorkoutPlan(workoutSetsForApi);
+    handleUpdateWorkoutPlan(routinesForApi);
     setCreateWorkoutFormActive(false);
+    notify();
     setFormData({
       ...formData,
       name: "",
@@ -82,20 +85,29 @@ const CreateWorkoutForm = ({
     setStep(1);
   };
 
+  const notify = () => {
+    toast.success("Successfully updated the workout plan!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   const handlePreviousStep = () => {
     setStep(step - 1);
   };
 
-  const handleCreateWorkoutPlan = async (workoutSetsForApi) => {
-    const workout = await workoutPlansService.createWorkoutPlan(
-      { ...formData, routines: workoutSetsForApi },
+  const handleUpdateWorkoutPlan = async (routinesForApi) => {
+    const details = await workoutPlansService.updateWorkoutPlan(
+      { ...formData, routines: routinesForApi },
+      id,
       token
     );
-    const workoutPlans = userDetails.workoutPlans.concat(workout);
-    setUserDetails({
-      ...userDetails,
-      workoutPlans,
-    });
+    setWorkoutPlanDetails(details);
   };
 
   return (
@@ -113,6 +125,10 @@ const CreateWorkoutForm = ({
           timesPerWeek={timesPerWeek}
         />
 
+        <button type="button" onClick={() => reset(defaultValues)}>
+          Reset
+        </button>
+
         <div className="flex">
           <button
             className="z-50 bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
@@ -124,9 +140,9 @@ const CreateWorkoutForm = ({
 
           <button
             type="submit"
-            className="z-50 bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            className="z-50 bg-green-500 hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
-            Create Workout
+            Update Workout
           </button>
         </div>
       </form>

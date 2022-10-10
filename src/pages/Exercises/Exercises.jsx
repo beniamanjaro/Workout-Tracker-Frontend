@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import ExerciseCard from "../../components/Exercise/ExerciseCard";
 import { AuthContext } from "../../context/AuthContext";
@@ -6,6 +6,7 @@ import exercisesService from "../../services/exercises";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ExerciseSearch from "../../components/Exercise/ExerciseSearch";
 import CategoriesSlider from "../../components/Exercise/CategoriesSlider";
+import SpinningLoader from "../../components/SpinningLoader";
 
 const Exercises = () => {
   const [exercises, setExercises] = useState([]);
@@ -32,7 +33,6 @@ const Exercises = () => {
 
   //Fetches the next 40 exercises
   const fetchMoreExercises = async () => {
-    console.log(pageNumber);
     if (!searchValue && category === "all") {
       setPageNumber(pageNumber + 1);
       const res = await exercisesService.getAllExercises(token, pageNumber);
@@ -56,8 +56,6 @@ const Exercises = () => {
       );
       setExercises(exercises.concat(res.data));
     }
-
-    console.log(pageNumber, searchValue);
   };
 
   return (
@@ -84,7 +82,11 @@ const Exercises = () => {
         dataLength={exercises.length}
         next={fetchMoreExercises}
         hasMore={true}
-        loader={<h4>Loading...</h4>}
+        loader={
+          <div className="absolute left-[50%]">
+            <SpinningLoader />
+          </div>
+        }
       >
         <div className="grid p-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8 md:ml-12 md:mr-12">
           {exercises?.map((e) => (

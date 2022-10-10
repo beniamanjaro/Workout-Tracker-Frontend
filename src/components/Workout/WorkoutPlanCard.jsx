@@ -1,5 +1,3 @@
-import React from "react";
-import img from "../../Untitled.png";
 import { BsArrowRight } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
@@ -8,7 +6,7 @@ const Card = ({ name, selectedWorkoutPlanId, workoutPlanId, timesPerWeek }) => {
     <>
       {selectedWorkoutPlanId === workoutPlanId ? (
         <div className="w-full hover:-translate-y-1 ease-in duration-150">
-          <Link to={`/workouts/${workoutPlanId}`}>
+          <Link to={`/workouts/${workoutPlanId} `}>
             <p className="text-xl">Selected Workout Plan</p>
             <div className="bg-white p-6 w-full border-b-4 border-b-yellow-400 cursor-pointer group flex justify-between rounded-lg shadow-lg">
               <div className="">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AiFillFacebook, AiOutlineGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
@@ -16,11 +16,9 @@ const LoginSocials = () => {
   const [disabled, setDisabled] = useState(false);
   const { user, loading, error, dispatch } = useContext(AuthContext);
   const navigator = useNavigate();
-  console.log(user);
 
   const handleCallbackResponse = async (response) => {
     let obj = jwt_decode(response.credential);
-    console.log(response);
     const user = await loginService.loginGoogle({
       Email: obj.email,
       IdToken: response.credential,

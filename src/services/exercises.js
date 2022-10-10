@@ -93,6 +93,23 @@ const getApiExercises = async () => {
   return res.data;
 };
 
+const getYoutubeSearchExercise = async (query) => {
+  const res = await axios.get(`https://youtube-v31.p.rapidapi.com/search`, {
+    params: {
+      q: `how to ${query}`,
+      part: "snippet,id",
+      regionCode: "US",
+      maxResults: "6",
+      order: "date",
+    },
+    headers: {
+      "X-RapidAPI-Key": "bae2af2328msha4c8d67313b2861p1b2bd2jsnebbe61f2481d",
+      "X-RapidAPI-Host": "youtube-v31.p.rapidapi.com",
+    },
+  });
+  return res.data;
+};
+
 const addExercisesBulk = async (exercises, token) => {
   const res = await axios.post(
     `https://localhost:7147/api/Exercises/add-exercises`,
@@ -116,4 +133,5 @@ export default {
   getExercisesCategories,
   getExercisesByCategory,
   getExercisesNames,
+  getYoutubeSearchExercise,
 };

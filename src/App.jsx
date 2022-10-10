@@ -12,6 +12,9 @@ import SignedInHeader from "./components/Header/SignedInHeader.jsx";
 import Workout from "./pages/Workout/Workout.jsx";
 import Exercises from "./pages/Exercises/Exercises.jsx";
 import History from "./pages/History/History.jsx";
+import Exercise from "./pages/Exercise/Exercise.jsx";
+import Progress from "./pages/Progress/Progress.jsx";
+import Explore from "./pages/Explore/Explore.jsx";
 
 const Layout = ({ children }) => {
   return (
@@ -61,6 +64,14 @@ const App = () => {
           }
         />
         <Route
+          path="/workouts/explore"
+          element={
+            <PrivateLayout>
+              <Explore />
+            </PrivateLayout>
+          }
+        />
+        <Route
           path="/history"
           element={
             <PrivateLayout>
@@ -77,7 +88,26 @@ const App = () => {
             </PrivateLayout>
           }
         />
+        <Route
+          path="/progress"
+          exact
+          element={
+            <PrivateLayout>
+              <Progress />
+            </PrivateLayout>
+          }
+        />
+        <Route
+          path="/exercises/:id"
+          exact
+          element={
+            <PrivateLayout>
+              <Exercise />
+            </PrivateLayout>
+          }
+        />
       </Route>
+
       <Route
         path="/"
         exact

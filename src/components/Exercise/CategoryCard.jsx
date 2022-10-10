@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { CgGym } from "react-icons/cg";
 import exercisesService from "../../services/exercises";

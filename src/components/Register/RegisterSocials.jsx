@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { AiFillFacebook, AiOutlineGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
@@ -9,7 +9,6 @@ const RegisterSocials = () => {
 
   const handleGetUserById = async () => {
     const user = await userService.getUserById(id);
-    console.log(user);
   };
 
   return (

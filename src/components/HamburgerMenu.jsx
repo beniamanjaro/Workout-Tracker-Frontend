@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 const HamburgerMenu = () => {
   const [visible, setVisible] = useState(true);

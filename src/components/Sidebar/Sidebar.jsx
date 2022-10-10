@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AiFillGithub,
   AiFillLinkedin,
@@ -15,7 +14,7 @@ const Sidebar = () => {
   return (
     <div className="sticky h-screen top-0 z-50">
       <div className="hidden lg:flex md:flex-col md:justify-between md:h-screen md:w-28 md:bg-[#06202A] md:border-r-2 md:border-black">
-        <Link to="/">
+        <Link to="/workouts">
           {/* <div className="pb-4 font-extralight bg-black text-white text-center self underline text-3xl">
             OrkOut
           </div> */}
@@ -41,7 +40,7 @@ const Sidebar = () => {
                 History
               </div>
             </Link>
-            <Link to="/" className="flex border-b-2 items-center gap-2">
+            <Link to="/progress" className="flex border-b-2 items-center gap-2">
               <BsGraphUp className="text-white w-8 h-8 pl-2" />
               <div
                 className=" mx-auto pt-4 pb-4 w-full text-white text-left cursor-pointer

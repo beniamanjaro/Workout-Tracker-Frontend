@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import WorkoutPlanFormStep2 from "../../components/Workout/WorkoutPlanFormStep2";
 import WorkoutCard from "../../components/Workout/WorkoutPlanCard";
 import WorkoutPlanFormStep1 from "../../components/Workout/WorkoutPlanFormStep1";
 import { AuthContext } from "../../context/AuthContext";
 import exercisesService from "../../services/exercises";
 import userService from "../../services/users";
+import { AiOutlineSearch } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const Workouts = () => {
   const [userDetails, setUserDetails] = useState({});
@@ -78,10 +80,16 @@ const Workouts = () => {
     <div className=" flex flex-col gap-2 justify-center items-center mt-24 w-full">
       <button
         onClick={() => setCreateWorkoutFormActive(true)}
-        class="bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+        className="bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
       >
         Create New WorkoutPlan
       </button>
+      <Link to={"/workouts/explore"}>
+        <div className="flex justify-center gap-1 items-center bg-white hover:bg-gray-100 active:scale-95 py-2 px-4 border border-gray-400 rounded shadow">
+          <AiOutlineSearch />
+          <button className="text-gray-800 font-semibold">Explore</button>
+        </div>
+      </Link>
       {createWorkoutFormActive && (
         <div className="overflow-y-auto fixed w-screen bg-white top-0 h-screen left-0 lg:left-28">
           {getCurrentStepForm()}
@@ -99,18 +107,31 @@ const Workouts = () => {
           <></>
         )
       )}
-      {userDetails?.workoutPlans?.map((wp) =>
-        wp.id !== userDetails.selectedWorkoutPlanId ? (
+      {userDetails?.workoutPlans
+        ?.filter((wp) => wp.userId === userId)
+        .map((wp) =>
+          wp.id !== userDetails.selectedWorkoutPlanId ? (
+            <WorkoutCard
+              name={wp.name}
+              selectedWorkoutPlanId={userDetails.selectedWorkoutPlanId}
+              timesPerWeek={wp.timesPerWeek}
+              workoutPlanId={wp.id}
+            />
+          ) : (
+            <></>
+          )
+        )}
+      Subscribed To
+      {userDetails?.workoutPlans
+        ?.filter((wp) => wp.userId !== userId)
+        .map((wp) => (
           <WorkoutCard
             name={wp.name}
             selectedWorkoutPlanId={userDetails.selectedWorkoutPlanId}
             timesPerWeek={wp.timesPerWeek}
             workoutPlanId={wp.id}
           />
-        ) : (
-          <></>
-        )
-      )}
+        ))}
     </div>
   );
 };
