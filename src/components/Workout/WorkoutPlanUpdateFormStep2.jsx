@@ -49,7 +49,6 @@ const CreateWorkoutForm = ({
     handleSubmit,
     getValues,
     formState: { errors },
-    reset,
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
@@ -124,10 +123,6 @@ const CreateWorkoutForm = ({
           options={options}
           timesPerWeek={timesPerWeek}
         />
-
-        <button type="button" onClick={() => reset(defaultValues)}>
-          Reset
-        </button>
 
         <div className="flex">
           <button
