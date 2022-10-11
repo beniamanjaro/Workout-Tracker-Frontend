@@ -33,6 +33,7 @@ const CategoriesSlider = ({
         >
           {categories.map((c) => (
             <CategoryCard
+              key={c}
               bodyPart={c}
               category={category}
               setCategory={setCategory}

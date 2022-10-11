@@ -98,6 +98,7 @@ const Workouts = () => {
       {userDetails?.workoutPlans?.map((wp) =>
         wp.id === userDetails.selectedWorkoutPlanId ? (
           <WorkoutCard
+            key={wp.id}
             name={wp.name}
             selectedWorkoutPlanId={userDetails.selectedWorkoutPlanId}
             workoutPlanId={wp.id}
@@ -112,6 +113,7 @@ const Workouts = () => {
         .map((wp) =>
           wp.id !== userDetails.selectedWorkoutPlanId ? (
             <WorkoutCard
+              key={wp.id}
               name={wp.name}
               selectedWorkoutPlanId={userDetails.selectedWorkoutPlanId}
               timesPerWeek={wp.timesPerWeek}
@@ -126,6 +128,7 @@ const Workouts = () => {
         ?.filter((wp) => wp.userId !== userId)
         .map((wp) => (
           <WorkoutCard
+            key={wp.id}
             name={wp.name}
             selectedWorkoutPlanId={userDetails.selectedWorkoutPlanId}
             timesPerWeek={wp.timesPerWeek}

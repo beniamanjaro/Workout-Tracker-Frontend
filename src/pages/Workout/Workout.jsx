@@ -300,7 +300,7 @@ const Workout = () => {
           <div className="m-4 grid p-4 grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 md:gap-8 md:ml-12 md:mr-12">
             {workoutPlanDetails.routines?.map((r) => {
               return (
-                <div className="flex flex-col">
+                <div className="flex flex-col" key={r.id}>
                   <RoutineCard
                     name={r.name}
                     dayOrder={r.dayOrderNumber}

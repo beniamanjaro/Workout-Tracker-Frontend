@@ -90,7 +90,7 @@ const Exercises = () => {
       >
         <div className="grid p-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8 md:ml-12 md:mr-12">
           {exercises?.map((e) => (
-            <ExerciseCard exercise={e} />
+            <ExerciseCard exercise={e} key={e.id} />
           ))}
         </div>
       </InfiniteScroll>

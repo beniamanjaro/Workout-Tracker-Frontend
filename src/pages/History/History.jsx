@@ -126,7 +126,7 @@ const History = () => {
 
       {completedRoutines.length > 1 ? (
         completedRoutines?.map((cr) => (
-          <div className="m-2">
+          <div className="m-2" key={cr.completedRoutineId}>
             <HistoryRoutineCard completedRoutineData={cr} />
           </div>
         ))

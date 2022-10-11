@@ -41,7 +41,7 @@ const ExerciseSearch = ({
             placeholder="Search"
             onChange={handleSearchInputChange}
           />
-          <button class="bg-red-500 hover:bg-white text-white hover:text-red-500 font-semibold py-2 px-4 border border-black rounded shadow duration-300">
+          <button className="bg-red-500 hover:bg-white text-white hover:text-red-500 font-semibold py-2 px-4 border border-black rounded shadow duration-300">
             Search
           </button>
         </div>
