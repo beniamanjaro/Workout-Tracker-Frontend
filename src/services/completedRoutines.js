@@ -15,6 +15,19 @@ const completeRoutine = async (data, token) => {
   return res.data;
 };
 
+const getCompletedRoutineById = async (id, token) => {
+  const res = await axios.get(
+    `${baseUrl}/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 const getCompletedRoutinesByUserId = async (id, token) => {
   const res = await axios.get(
     `${baseUrl}/user?userId=${id}`,
@@ -28,4 +41,26 @@ const getCompletedRoutinesByUserId = async (id, token) => {
   return res.data;
 };
 
-export default { completeRoutine, getCompletedRoutinesByUserId };
+const getCompletedRoutinesByUserByWorkoutPlan = async (
+  userId,
+  workoutPlanId,
+  token
+) => {
+  const res = await axios.get(
+    `${baseUrl}/users/${userId}/workout-plans/${workoutPlanId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
+export default {
+  completeRoutine,
+  getCompletedRoutinesByUserId,
+  getCompletedRoutineById,
+  getCompletedRoutinesByUserByWorkoutPlan,
+};
