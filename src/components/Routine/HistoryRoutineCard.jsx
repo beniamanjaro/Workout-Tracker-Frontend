@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const HistoryRoutineCard = ({ completedRoutineData }) => {
   const options = {
     weekday: "long",
@@ -37,9 +39,13 @@ const HistoryRoutineCard = ({ completedRoutineData }) => {
         <tbody className="divide-y divide-gray-100">
           <tr className="bg-white">
             <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-              <a href="#" className="font-bold text-blue-500 hover:underline">
+              <Link
+                to={`/history/completed-routines/${completedRoutineData.completedRoutineId}`}
+                href="#"
+                className="font-bold text-blue-500 hover:underline"
+              >
                 {completedRoutineData.completedRoutineId}
-              </a>
+              </Link>
             </td>
             <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
               {completedRoutineData.workoutPlanName}
