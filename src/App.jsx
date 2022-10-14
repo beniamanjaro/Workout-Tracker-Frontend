@@ -15,6 +15,7 @@ import History from "./pages/History/History.jsx";
 import Exercise from "./pages/Exercise/Exercise.jsx";
 import Progress from "./pages/Progress/Progress.jsx";
 import Explore from "./pages/Explore/Explore.jsx";
+import CompletedRoutine from "./pages/CompletedRoutine/CompletedRoutine.jsx";
 
 const Layout = ({ children }) => {
   return (
@@ -76,6 +77,14 @@ const App = () => {
           element={
             <PrivateLayout>
               <History />
+            </PrivateLayout>
+          }
+        />
+        <Route
+          path="/history/completed-routines/:id"
+          element={
+            <PrivateLayout>
+              <CompletedRoutine />
             </PrivateLayout>
           }
         />
