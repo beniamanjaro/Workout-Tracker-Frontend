@@ -29,7 +29,7 @@ const getHistoryByTimeframe = async (userId, timeframe, token) => {
 
 const subscribeToWorkoutPlan = async (userId, workoutPlanId, token) => {
   const res = await axios.put(
-    `${baseUrl}/${userId}/workout-plans?workoutPlanId=${workoutPlanId}`,
+    `${baseUrl}/${userId}/workout-plans/subscribe?workoutPlanId=${workoutPlanId}`,
     "",
     {
       headers: {
