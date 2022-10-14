@@ -5,10 +5,11 @@ import RoutineCard from "../../components/Routine/RoutineCard";
 import { AuthContext } from "../../context/AuthContext";
 import workoutPlanService from "../../services/workoutPlans";
 import exercisesService from "../../services/exercises";
+import userService from "../../services/users";
+import completedRoutinesService from "../../services/completedRoutines";
 import WorkoutPlanUpdateFormStep1 from "../../components/Workout/WorkoutPlanUpdateFormStep1";
 import WorkoutPlanUpdateFormStep2 from "../../components/Workout/WorkoutPlanUpdateFormStep2";
 import CompletedRoutineForm from "../../components/CompletedRoutine/CompletedRoutineForm";
-import userService from "../../services/users";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -21,6 +22,7 @@ import {
 import { Radar } from "react-chartjs-2";
 import TopUsersTable from "../../components/Workout/TopUsersTable";
 import SpinningLoader from "../../components/SpinningLoader";
+import HistoryRoutineCard from "../../components/Routine/HistoryRoutineCard";
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -49,6 +51,7 @@ export const data = {
 const Workout = () => {
   const [workoutPlanDetails, setWorkoutPlanDetails] = useState({});
   const [workoutPlanAuthorDetails, setWorkoutPlanAuthorDetails] = useState({});
+  const [recentCompletedRoutines, setRecentCompletedRoutines] = useState([]);
   const [visitingUserDetails, setVisitingUserDetails] = useState({});
   const [routineData, setRoutineData] = useState({});
   const [muscleSplitData, setMuscleSplitData] = useState([]);
@@ -212,10 +215,14 @@ const Workout = () => {
       );
       setWorkoutPlanAuthorDetails(data);
     };
-    const getVisitingUserDetails = async () => {
-      const data = await userService.getUserById(userId, token);
-      setVisitingUserDetails(data);
-    };
+    if (userId !== undefined) {
+      console.log(userId);
+      const getVisitingUserDetails = async () => {
+        const data = await userService.getUserById(userId, token);
+        setVisitingUserDetails(data);
+      };
+      getVisitingUserDetails();
+    }
     const getTopUsersForWorkoutPlan = async () => {
       const data = await workoutPlanService.getTopUsersForWorkoutPlanById(
         id,
@@ -234,11 +241,20 @@ const Workout = () => {
       const data = await exercisesService.getExercisesNames(token);
       setExercisesNames(data);
     };
+    const GetRecentCompletedRoutines = async () => {
+      const data =
+        await completedRoutinesService.getCompletedRoutinesByUserByWorkoutPlan(
+          userId,
+          id,
+          token
+        );
+      setRecentCompletedRoutines(data);
+    };
     getMuscleSplitPercentages();
     handleGetExercisesNames();
     getWorkoutPlanAuthorDetails();
-    getVisitingUserDetails();
     getTopUsersForWorkoutPlan();
+    GetRecentCompletedRoutines();
   }, [workoutPlanDetails]);
   return (
     <>
@@ -287,7 +303,9 @@ const Workout = () => {
             <div className="bg-white border m-auto max-w-[80vw] border-black text-xl lg:ml-16 lg:w-[40vw]">
               <Radar data={{ ...data, datasets: dataSets }} />
             </div>
-            <TopUsersTable topUsers={topUsers} />
+            <div className="mr-2">
+              <TopUsersTable topUsers={topUsers} />
+            </div>
           </div>
 
           {createWorkoutFormActive && (
@@ -341,6 +359,14 @@ const Workout = () => {
                 />
               </div>
             )}
+          </div>
+          <div className="flex items-center flex-col">
+            <h3 className="text-2xl">Recent Activity</h3>
+            {recentCompletedRoutines.map((cr) => (
+              <div className="m-2" key={cr.completedRoutineId}>
+                <HistoryRoutineCard completedRoutineData={cr} />
+              </div>
+            ))}
           </div>
         </div>
       ) : (
