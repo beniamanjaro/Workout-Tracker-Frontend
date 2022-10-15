@@ -9,7 +9,7 @@ import userService from "../../services/users";
 import completedRoutinesService from "../../services/completedRoutines";
 import WorkoutPlanUpdateFormStep1 from "../../components/Workout/WorkoutPlanUpdateFormStep1";
 import WorkoutPlanUpdateFormStep2 from "../../components/Workout/WorkoutPlanUpdateFormStep2";
-import CompletedRoutineForm from "../../components/CompletedRoutine/CompletedRoutineForm";
+import CompleteRoutineForm from "../../components/CompletedRoutine/CompleteRoutineForm";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -23,6 +23,8 @@ import { Radar } from "react-chartjs-2";
 import TopUsersTable from "../../components/Workout/TopUsersTable";
 import SpinningLoader from "../../components/SpinningLoader";
 import HistoryRoutineCard from "../../components/Routine/HistoryRoutineCard";
+import { WorkoutPlansContext } from "../../context/WorkoutPlansContext";
+import { REMOVE_WORKOUT_PLAN } from "../../context/actionTypes";
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -70,6 +72,8 @@ const Workout = () => {
     timesPerWeek: 0,
     routines: "",
   });
+
+  const { dispatch } = useContext(WorkoutPlansContext);
 
   const navigate = useNavigate();
 
@@ -178,8 +182,13 @@ const Workout = () => {
     });
   };
 
-  const handleDeleteWorkoutPlan = () => {
-    workoutPlanService.deleteWorkoutPlanById(id, token);
+  const handleDeleteWorkoutPlan = async () => {
+    await workoutPlanService.deleteWorkoutPlanById(id, token);
+
+    dispatch({
+      type: REMOVE_WORKOUT_PLAN,
+      payload: id,
+    });
 
     navigate("/workouts");
   };
@@ -346,9 +355,11 @@ const Workout = () => {
             })}
             {completeRoutineActive && (
               <div className="overflow-y-auto fixed w-screen bg-white top-0 h-screen left-0 lg:left-28">
-                <CompletedRoutineForm
+                <CompleteRoutineForm
                   setCompleteRoutineActive={setCompleteRoutineActive}
                   routineData={routineData}
+                  recentCompletedRoutines={recentCompletedRoutines}
+                  setRecentCompletedRoutines={setRecentCompletedRoutines}
                   exercises={routineData.workoutSets
                     ?.flatMap((ws) => ws.sets)
                     .flatMap((s) => s)}
@@ -362,7 +373,7 @@ const Workout = () => {
           </div>
           <div className="flex items-center flex-col">
             <h3 className="text-2xl">Recent Activity</h3>
-            {recentCompletedRoutines.map((cr) => (
+            {recentCompletedRoutines?.map((cr) => (
               <div className="m-2" key={cr.completedRoutineId}>
                 <HistoryRoutineCard completedRoutineData={cr} />
               </div>

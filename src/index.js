@@ -5,14 +5,17 @@ import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
+import { WorkoutPlansContextProvider } from "./context/WorkoutPlansContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthContextProvider>
-    <Router>
-      <ToastContainer />
-      <App />
-    </Router>
+    <WorkoutPlansContextProvider>
+      <Router>
+        <ToastContainer />
+        <App />
+      </Router>
+    </WorkoutPlansContextProvider>
   </AuthContextProvider>
 );
 

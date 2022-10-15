@@ -6,6 +6,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import workoutPlansService from "../../services/workoutPlans";
 import * as yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
+import { WorkoutPlansContext } from "../../context/WorkoutPlansContext";
+import { ADD_WORKOUT_PLAN } from "../../context/actionTypes";
 
 const schema = yup
   .object({
@@ -30,8 +32,6 @@ const CreateWorkoutForm = ({
   options,
   setStep,
   step,
-  userDetails,
-  setUserDetails,
   timesPerWeek,
 }) => {
   const defaultValues = {
@@ -41,6 +41,8 @@ const CreateWorkoutForm = ({
   const {
     user: { token },
   } = useContext(AuthContext);
+
+  const { dispatch } = useContext(WorkoutPlansContext);
 
   const {
     control,
@@ -91,10 +93,9 @@ const CreateWorkoutForm = ({
       { ...formData, routines: workoutSetsForApi },
       token
     );
-    const workoutPlans = userDetails.workoutPlans.concat(workout);
-    setUserDetails({
-      ...userDetails,
-      workoutPlans,
+    dispatch({
+      type: ADD_WORKOUT_PLAN,
+      payload: workout,
     });
   };
 
