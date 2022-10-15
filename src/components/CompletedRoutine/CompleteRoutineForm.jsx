@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useForm } from "react-hook-form";
-import FieldArray from "../CompletedRoutine/FieldArray";
+import FieldArray from "./FieldArray";
 import workoutPlansService from "../../services/workoutPlans";
 import completeRoutineService from "../../services/completedRoutines";
 import { AuthContext } from "../../context/AuthContext";
@@ -12,6 +12,8 @@ const CompletedRoutineForm = ({
   routineData,
   workoutPlanData,
   exercises,
+  setRecentCompletedRoutines,
+  recentCompletedRoutines,
   id,
   setWorkoutPlanData,
   visitingUserDetails,
@@ -33,50 +35,55 @@ const CompletedRoutineForm = ({
     setValue,
   } = useForm({ defaultValues });
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     const formDataExercises = formData.exercises;
-    const workoutSets = convertExercisesToWorkoutSets(formDataExercises);
+    // const workoutSets = convertExercisesToWorkoutSets(formDataExercises);
 
-    const routines = workoutPlanData.routines.filter(
-      (r) => r.id !== routineData.id
-    );
+    // const routines = workoutPlanData.routines.filter(
+    //   (r) => r.id !== routineData.id
+    // );
 
-    const updatedRoutines = [
-      ...routines,
-      {
-        ...routineData,
-        workoutSets,
-      },
-    ];
+    // const updatedRoutines = [
+    //   ...routines,
+    //   {
+    //     ...routineData,
+    //     workoutSets,
+    //   },
+    // ];
     const completedRoutineData =
       getCompletedRoutineDataFromExercises(formDataExercises);
 
-    const modified = updatedRoutines.map((r) => {
-      let updatedWorkoutSets = [];
-      r.workoutSets.map((ws) => {
-        let sets = [];
-        ws.sets.forEach((s) => {
-          sets.push({
-            exerciseId: s.exercise.id,
-            numberOfReps: s.numberOfReps,
-            weight: s.weight,
-          });
-        });
-        return updatedWorkoutSets.push({ sets });
-      });
-      return {
-        name: r.name,
-        dayOrderNumber: r.dayOrderNumber,
-        workoutSets: updatedWorkoutSets,
-      };
-    });
+    // const modified = updatedRoutines.map((r) => {
+    //   let updatedWorkoutSets = [];
+    //   r.workoutSets.map((ws) => {
+    //     let sets = [];
+    //     ws.sets.forEach((s) => {
+    //       sets.push({
+    //         exerciseId: s.exercise.id,
+    //         numberOfReps: s.numberOfReps,
+    //         weight: s.weight,
+    //       });
+    //     });
+    //     return updatedWorkoutSets.push({ sets });
+    //   });
+    //   return {
+    //     name: r.name,
+    //     dayOrderNumber: r.dayOrderNumber,
+    //     workoutSets: updatedWorkoutSets,
+    //   };
+    // });
     // console.log("modified", modified);
     // console.log("test", updatedRoutines);
-    handleCompleteRoutine({
+    const addedCompletedRoutine = await handleCompleteRoutine({
       ...completedRoutineData,
       routineName: routineData.name,
     });
-    notify();
+    setRecentCompletedRoutines([
+      addedCompletedRoutine,
+      ...recentCompletedRoutines,
+    ]);
+    notifySuccess();
+    setCompleteRoutineActive(false);
     // handleUpdateWorkoutPlan(modified);
     // setCompleteRoutineActive(false);
     // console.log("routines", routines);
@@ -108,7 +115,7 @@ const CompletedRoutineForm = ({
     };
   };
 
-  const notify = () => {
+  const notifySuccess = () => {
     toast.success("Congratulations! Successfully completed the routine!", {
       position: "top-right",
       autoClose: 3000,
@@ -120,52 +127,52 @@ const CompletedRoutineForm = ({
     });
   };
 
-  const convertExercisesToWorkoutSets = (exercises) => {
-    let workoutSets = [];
-    let workoutSetCount = 0;
+  // const convertExercisesToWorkoutSets = (exercises) => {
+  //   let workoutSets = [];
+  //   let workoutSetCount = 0;
 
-    const updateWorkoutSet = workoutPlanData.routines.filter(
-      (r) => r.id === routineData.id
-    )[0];
+  //   const updateWorkoutSet = workoutPlanData.routines.filter(
+  //     (r) => r.id === routineData.id
+  //   )[0];
 
-    for (let i = 0; i <= exercises.length; i++) {
-      let temp = [];
-      if (exercises[i]) {
-        temp.push(exercises[i]);
-      }
-      while (
-        i < exercises.length - 1 &&
-        exercises[i].exercise.name === exercises[i + 1].exercise.name
-      ) {
-        temp.push(exercises[i + 1]);
-        i++;
-      }
-      if (temp.length !== 0) {
-        workoutSets.push({
-          sets: temp,
-          id: updateWorkoutSet.workoutSets[workoutSetCount].id,
-        });
-        workoutSetCount++;
-      }
-      temp = [];
-    }
-    return workoutSets;
-  };
+  //   for (let i = 0; i <= exercises.length; i++) {
+  //     let temp = [];
+  //     if (exercises[i]) {
+  //       temp.push(exercises[i]);
+  //     }
+  //     while (
+  //       i < exercises.length - 1 &&
+  //       exercises[i].exercise.name === exercises[i + 1].exercise.name
+  //     ) {
+  //       temp.push(exercises[i + 1]);
+  //       i++;
+  //     }
+  //     if (temp.length !== 0) {
+  //       workoutSets.push({
+  //         sets: temp,
+  //         id: updateWorkoutSet.workoutSets[workoutSetCount].id,
+  //       });
+  //       workoutSetCount++;
+  //     }
+  //     temp = [];
+  //   }
+  //   return workoutSets;
+  // };
 
-  const handleUpdateWorkoutPlan = async (routines) => {
-    console.log("formData", workoutPlanData);
-    console.log("token", token);
-    const details = await workoutPlansService.updateWorkoutPlan(
-      { ...workoutPlanData, routines },
-      id,
-      token
-    );
-    console.log("details", details);
-    setWorkoutPlanData(details);
-  };
+  // const handleUpdateWorkoutPlan = async (routines) => {
+  //   console.log("formData", workoutPlanData);
+  //   console.log("token", token);
+  //   const details = await workoutPlansService.updateWorkoutPlan(
+  //     { ...workoutPlanData, routines },
+  //     id,
+  //     token
+  //   );
+  //   console.log("details", details);
+  //   setWorkoutPlanData(details);
+  // };
 
   const handleCompleteRoutine = async (data) => {
-    completeRoutineService.completeRoutine(data, token);
+    return await completeRoutineService.completeRoutine(data, token);
   };
 
   return (
@@ -176,7 +183,7 @@ const CompletedRoutineForm = ({
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        class="flex flex-col items-center mt-8"
+        className="flex flex-col items-center mt-8"
       >
         <FieldArray
           {...{
