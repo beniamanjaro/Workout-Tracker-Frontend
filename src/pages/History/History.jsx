@@ -8,6 +8,7 @@ import HistoryChart from "./HistoryBarChart";
 import SpinningLoader from "../../components/SpinningLoader";
 import Skeleton from "react-loading-skeleton";
 import HistoryRoutineCardSkeleton from "../../components/Skeletons/HistoryRoutineCardSkeleton";
+import HistoryCompletedRoutines from "../../components/History/HistoryCompletedRoutines";
 
 const History = () => {
   const [completedRoutines, setCompletedRoutines] = useState([]);
@@ -21,8 +22,14 @@ const History = () => {
 
   useEffect(() => {
     const handleGetCompletedRoutines = async () => {
-      const data = await usersService.getHistoryByTimeframe(userId, 3, token);
-      setCompletedRoutines(data);
+      const data = await usersService.getHistoryByTimeframe(
+        userId,
+        3,
+        token,
+        1,
+        40
+      );
+      setCompletedRoutines(data.data);
     };
     handleGetCompletedRoutines();
   }, []);
@@ -66,9 +73,11 @@ const History = () => {
     const data = await usersService.getHistoryByTimeframe(
       userId,
       e.value,
-      token
+      token,
+      1,
+      40
     );
-    setCompletedRoutines(data);
+    setCompletedRoutines(data.data);
   };
 
   return (
@@ -125,11 +134,7 @@ const History = () => {
       </div>
 
       {completedRoutines.length > 1 ? (
-        completedRoutines?.map((cr) => (
-          <div className="m-2" key={cr.completedRoutineId}>
-            <HistoryRoutineCard completedRoutineData={cr} />
-          </div>
-        ))
+        <HistoryCompletedRoutines />
       ) : (
         <>
           <HistoryRoutineCardSkeleton />

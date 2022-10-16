@@ -14,9 +14,15 @@ const getUserById = async (id, token) => {
   return res.data;
 };
 
-const getHistoryByTimeframe = async (userId, timeframe, token) => {
+const getHistoryByTimeframe = async (
+  userId,
+  timeframe,
+  token,
+  pageNumber,
+  pageSize
+) => {
   const res = await axios.get(
-    `${baseUrl}/${userId}/history?timeframeInMonths=${timeframe}`,
+    `${baseUrl}/${userId}/history?timeframeInMonths=${timeframe}&PageNumber=${pageNumber}&PageSize=${pageSize}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
