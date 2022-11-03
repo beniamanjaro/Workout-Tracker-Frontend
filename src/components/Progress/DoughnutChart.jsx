@@ -32,7 +32,15 @@ const DoughnutChart = ({ labels, values }) => {
     plugins: [],
   };
 
-  return <Doughnut type="doughnut" data={data} options={options} />;
+  return (
+    <div className="flex-col justify-center items-center">
+      <p className="text-xl text-center">
+        Number of exercises completed
+        <br /> by each muscle group:
+      </p>
+      <Doughnut type="doughnut" data={data} options={options} />
+    </div>
+  );
 };
 
 export default DoughnutChart;

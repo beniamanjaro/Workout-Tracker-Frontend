@@ -6,6 +6,8 @@ import workoutPlansService from "../../services/workoutPlans";
 import completeRoutineService from "../../services/completedRoutines";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const CompletedRoutineForm = ({
   setCompleteRoutineActive,
@@ -26,6 +28,21 @@ const CompletedRoutineForm = ({
     user: { token },
   } = useContext(AuthContext);
 
+  const validateSchema = Yup.object().shape({
+    exercises: Yup.array().of(
+      Yup.object().shape({
+        weight: Yup.number().required().positive().integer(),
+        numberOfReps: Yup.number().required().positive().integer(),
+      })
+    ),
+  });
+
+  const formOptions = {
+    resolver: yupResolver(validateSchema),
+    mode: "onChange",
+    defaultValues: { exercises },
+  };
+
   const {
     control,
     register,
@@ -33,7 +50,7 @@ const CompletedRoutineForm = ({
     getValues,
     formState: { errors },
     setValue,
-  } = useForm({ defaultValues });
+  } = useForm(formOptions);
 
   const onSubmit = async (formData) => {
     const formDataExercises = formData.exercises;
@@ -126,6 +143,17 @@ const CompletedRoutineForm = ({
       progress: undefined,
     });
   };
+  const notifyError = () => {
+    toast.error("Please Complete All fields!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   // const convertExercisesToWorkoutSets = (exercises) => {
   //   let workoutSets = [];
@@ -171,6 +199,14 @@ const CompletedRoutineForm = ({
   //   setWorkoutPlanData(details);
   // };
 
+  console.log(errors);
+
+  const handleClick = () => {
+    if (errors.exercises) {
+      notifyError();
+    }
+  };
+
   const handleCompleteRoutine = async (data) => {
     return await completeRoutineService.completeRoutine(data, token);
   };
@@ -178,7 +214,7 @@ const CompletedRoutineForm = ({
   return (
     <div className="h-screen overflow-scroll bg-white fixed top-0 w-screen left-0 lg:left-28 flex flex-col items-center">
       <h1 className="text-center text-3xl mt-8 underline decoration-black">
-        Workout Plan Details
+        Complete Routine
       </h1>
 
       <form
@@ -197,6 +233,7 @@ const CompletedRoutineForm = ({
         />
         <button
           type="submit"
+          onClick={handleClick}
           className="z-50 bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         >
           Complete Routine

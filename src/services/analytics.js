@@ -40,6 +40,19 @@ const getTopUsedWorkoutPlans = async (userId, size, token) => {
   return res.data;
 };
 
+const getMuscleSplitForAllTime = async (userId, token) => {
+  const res = await axios.get(
+    `${baseUrl}/${userId}/analytics/muscle-split`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 const getAllTimeStats = async (userId, token) => {
   const res = await axios.get(
     `${baseUrl}/${userId}/analytics`,
@@ -58,4 +71,5 @@ export default {
   getTopUsedExercises,
   getTopUsedWorkoutPlans,
   getAllTimeStats,
+  getMuscleSplitForAllTime,
 };

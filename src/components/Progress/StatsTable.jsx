@@ -1,13 +1,13 @@
 import React from "react";
 
-const StatsTable = ({ stats }) => {
+const StatsTable = ({ stats, title }) => {
   return (
-    <div className="overflow-auto bg-white rounded-lg border border-black shadow hidden md:block">
+    <div className="overflow-auto bg-white rounded-lg border border-black shadow ">
       <table className="w-full bg-white">
         <thead>
           <tr>
             <th colSpan={2} className="bg-white whitespace-nowrap">
-              All Time Stats
+              {title}
             </th>
           </tr>
         </thead>

@@ -43,7 +43,6 @@ const WorkoutPlansReducer = (state, action) => {
         workoutPlans: [...state.workoutPlans, payload],
       };
     case REMOVE_WORKOUT_PLAN:
-      console.log(payload);
       return {
         ...state,
         workoutPlans: state.workoutPlans.filter((wp) => wp.id != payload),

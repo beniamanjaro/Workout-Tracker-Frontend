@@ -6,13 +6,12 @@ const ExerciseYoutubeVideos = ({ exerciseYoutubeVideos, name }) => {
         <span className="text-black underline decoration-pink-500 capitalize">
           {name}
         </span>{" "}
-        exercises videos
+        tutorial videos:
       </h3>
       <div className="gap-4 columns-2 lg:columns-3 xl:columns-6 m-2">
         {exerciseYoutubeVideos?.map((video, index) => (
-          <div className="p-2">
+          <div className="p-2" key={index}>
             <a
-              key={index}
               className=""
               href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
               target="_blank"

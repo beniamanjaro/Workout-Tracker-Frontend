@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { useEffect } from "react";
+import { MuscleSplitChart } from "../../components/CompletedRoutine/MuscleSplitChart";
 import DoughnutChart from "../../components/Progress/DoughnutChart";
 import StatsTable from "../../components/Progress/StatsTable";
 import TopExercisesTable from "../../components/Progress/TopExercisesTable";
@@ -11,6 +12,7 @@ const Progress = () => {
   const [exercisesByMuscleGroupData, setExercisesByMuscleGroupData] = useState(
     {}
   );
+  const [muscleSplit, setMuscleSplit] = useState({});
   const [statsData, setStatsData] = useState({});
   const [topFiveExercises, setTopFiveExercises] = useState([]);
   const [topThreeWorkoutPlans, setTopThreeWorkoutPlans] = useState([]);
@@ -34,6 +36,13 @@ const Progress = () => {
       const data = await analyticsService.getAllTimeStats(userId, token);
       setStatsData(data);
     };
+    const getMuscleSplit = async () => {
+      const data = await analyticsService.getMuscleSplitForAllTime(
+        userId,
+        token
+      );
+      setMuscleSplit(data);
+    };
     const getTopThreeUsedWorkoutPlans = async () => {
       const data = await analyticsService.getTopUsedWorkoutPlans(
         userId,
@@ -46,17 +55,12 @@ const Progress = () => {
     getTopFiveUsedExercises();
     getExercisesCountByMuscleGroup();
     getStatsData();
+    getMuscleSplit();
   }, []);
 
   return (
-    <div className="flex">
-      <div className="max-w-[20vw]">
-        <DoughnutChart
-          labels={Object.keys(exercisesByMuscleGroupData)}
-          values={Object.values(exercisesByMuscleGroupData)}
-        />
-      </div>
-      <div className="flex gap-2">
+    <div className="flex flex-col">
+      <div className="flex flex-col lg:flex-row gap-2">
         <div>
           <TopExercisesTable topExercises={topFiveExercises} />
         </div>
@@ -64,8 +68,20 @@ const Progress = () => {
           <TopWorkoutPlansTable topWorkoutPlans={topThreeWorkoutPlans} />
         </div>
         <div>
-          <StatsTable stats={statsData} />
+          <StatsTable stats={statsData} title={"All Time Stats"} />
         </div>
+      </div>
+      <div className="lg:max-w-[20vw]">
+        <DoughnutChart
+          labels={Object.keys(exercisesByMuscleGroupData)}
+          values={Object.values(exercisesByMuscleGroupData)}
+        />
+      </div>
+      <div>
+        <MuscleSplitChart
+          labels={Object.keys(muscleSplit)}
+          values={Object.values(muscleSplit)}
+        />
       </div>
     </div>
   );

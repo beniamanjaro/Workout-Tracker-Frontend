@@ -4,7 +4,7 @@ import Pagination from "./Pagination";
 import usersService from "../../services/users";
 import { AuthContext } from "../../context/AuthContext";
 
-const HistoryCompletedRoutines = () => {
+const HistoryCompletedRoutines = ({ timeFrame }) => {
   const pageNumberLimit = 5;
   const [passengersData, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,7 @@ const HistoryCompletedRoutines = () => {
     const handleGetCompletedRoutines = async () => {
       const data = await usersService.getHistoryByTimeframe(
         userId,
-        3,
+        timeFrame,
         token,
         currentPage,
         5
@@ -53,7 +53,7 @@ const HistoryCompletedRoutines = () => {
       setData(data);
     };
     handleGetCompletedRoutines();
-  }, [currentPage]);
+  }, [currentPage, timeFrame]);
 
   return (
     <div>

@@ -4,20 +4,12 @@ import { Link } from "react-router-dom";
 const CompletedRoutineCard = ({ name, exercises }) => {
   return (
     <div className="flex flex-col">
-      <table className="bg-white h-24">
+      <table className="bg-white h-12">
         <thead>
           <tr>
             <th
               colSpan={3}
               className="text-xl border border-black bg-amber-500 text-center"
-            >
-              &nbsp;{`day-${0}`}
-            </th>
-          </tr>
-          <tr>
-            <th
-              colSpan={3}
-              className="text-xl border border-black bg-white text-center"
             >
               &nbsp;{name}
             </th>

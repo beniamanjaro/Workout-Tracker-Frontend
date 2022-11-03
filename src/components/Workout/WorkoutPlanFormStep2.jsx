@@ -73,7 +73,7 @@ const CreateWorkoutForm = ({
       };
     });
 
-    handleCreateWorkoutPlan(workoutSetsForApi);
+    handleCreateWorkoutPlan(workoutSetsForApi, workoutSetsForApi.length);
     setCreateWorkoutFormActive(false);
     setFormData({
       ...formData,
@@ -88,9 +88,9 @@ const CreateWorkoutForm = ({
     setStep(step - 1);
   };
 
-  const handleCreateWorkoutPlan = async (workoutSetsForApi) => {
+  const handleCreateWorkoutPlan = async (workoutSetsForApi, timesPerWeek) => {
     const workout = await workoutPlansService.createWorkoutPlan(
-      { ...formData, routines: workoutSetsForApi },
+      { ...formData, timesPerWeek: timesPerWeek, routines: workoutSetsForApi },
       token
     );
     dispatch({
@@ -116,7 +116,7 @@ const CreateWorkoutForm = ({
 
         <div className="flex">
           <button
-            className="z-50 bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            className="bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
             disabled={step === 1 ? true : false}
             onClick={handlePreviousStep}
           >
@@ -125,7 +125,7 @@ const CreateWorkoutForm = ({
 
           <button
             type="submit"
-            className="z-50 bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            className="bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Create Workout
           </button>

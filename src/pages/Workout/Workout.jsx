@@ -25,6 +25,7 @@ import SpinningLoader from "../../components/SpinningLoader";
 import HistoryRoutineCard from "../../components/Routine/HistoryRoutineCard";
 import { WorkoutPlansContext } from "../../context/WorkoutPlansContext";
 import { REMOVE_WORKOUT_PLAN } from "../../context/actionTypes";
+import Modal from "../../components/Workout/WorkoutDeleteModal";
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -60,6 +61,7 @@ const Workout = () => {
   const [exercisesNames, setExercisesNames] = useState([]);
   const [topUsers, setTopUsers] = useState([]);
   const [completeRoutineActive, setCompleteRoutineActive] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [step, setStep] = useState(1);
   const [createWorkoutFormActive, setCreateWorkoutFormActive] = useState(false);
   const {
@@ -204,6 +206,19 @@ const Workout = () => {
       workoutPlans: visitingUserDetails.workoutPlans.concat(workoutPlanDetails),
     });
   };
+  const handleUnSubscribeFromWorkoutPlan = async () => {
+    await userService.unSubscribeFromWorkoutPlan(
+      visitingUserDetails.id,
+      workoutPlanDetails.id,
+      token
+    );
+    setVisitingUserDetails({
+      ...visitingUserDetails,
+      workoutPlans: visitingUserDetails.workoutPlans.filter(
+        (wp) => wp.id !== workoutPlanDetails.id
+      ),
+    });
+  };
 
   useEffect(() => {
     if (workoutPlanDetails.userId === undefined) {
@@ -225,7 +240,6 @@ const Workout = () => {
       setWorkoutPlanAuthorDetails(data);
     };
     if (userId !== undefined) {
-      console.log(userId);
       const getVisitingUserDetails = async () => {
         const data = await userService.getUserById(userId, token);
         setVisitingUserDetails(data);
@@ -255,9 +269,11 @@ const Workout = () => {
         await completedRoutinesService.getCompletedRoutinesByUserByWorkoutPlan(
           userId,
           id,
-          token
+          token,
+          1,
+          5
         );
-      setRecentCompletedRoutines(data);
+      setRecentCompletedRoutines(data.data);
     };
     getMuscleSplitPercentages();
     handleGetExercisesNames();
@@ -265,6 +281,7 @@ const Workout = () => {
     getTopUsersForWorkoutPlan();
     GetRecentCompletedRoutines();
   }, [workoutPlanDetails]);
+
   return (
     <>
       {!!workoutPlanAuthorDetails.username ? (
@@ -275,9 +292,17 @@ const Workout = () => {
                 visitingUserDetails.workoutPlans.filter(
                   (wp) => wp.id === workoutPlanDetails.id
                 ).length === 1 ? (
-                  "(Subscriber)"
+                  <div>
+                    <h4 className="">(Subscriber)</h4>
+                    <button
+                      className=""
+                      onClick={handleUnSubscribeFromWorkoutPlan}
+                    >
+                      Unsubscribe
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={handleSubscribeToWorkoutPlan}>
+                  <button className="" onClick={handleSubscribeToWorkoutPlan}>
                     Subscribe
                   </button>
                 )
@@ -295,14 +320,14 @@ const Workout = () => {
           {userId === workoutPlanDetails.userId && (
             <div className="flex lg:justify-end gap-2 lg:mr-16 m-2">
               <button
-                className="bg-green-500 w-full lg:max-w-[15vw] hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-black rounded shadow"
+                className="bg-green-500 w-full lg:max-w-[15vw] hover:bg-green-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-black rounded shadow"
                 onClick={handleShowForm}
               >
                 Edit Workout Plan
               </button>
               <button
-                className="bg-red-500 w-full lg:max-w-[15vw] hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-black rounded shadow"
-                onClick={handleDeleteWorkoutPlan}
+                className="bg-red-600 w-full lg:max-w-[15vw] hover:bg-red-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-black rounded shadow"
+                onClick={() => setShowModal(true)}
               >
                 Delete Workout Plan
               </button>
@@ -383,6 +408,11 @@ const Workout = () => {
       ) : (
         <SpinningLoader />
       )}
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        handleDeleteWorkoutPlan={handleDeleteWorkoutPlan}
+      />
     </>
   );
 };

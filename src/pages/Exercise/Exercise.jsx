@@ -8,6 +8,7 @@ import ExerciseYoutubeVideos from "../../components/Exercise/ExerciseYoutubeVide
 
 const Exercise = () => {
   const [exerciseDetails, setExerciseDetails] = useState({});
+  const [similarExercises, setSimilarExercises] = useState([]);
   const [exerciseYoutubeVideos, setExerciseYoutubeVideos] = useState([]);
   const {
     user: { token },
@@ -15,32 +16,30 @@ const Exercise = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    if (exerciseDetails.name === undefined) {
-      const getExerciseDetails = async () => {
-        const data = await exercisesService.getExerciseById(id, token);
-        setExerciseDetails(data);
-      };
-      getExerciseDetails();
-    }
-    if (exerciseDetails.name !== undefined) {
-      const getExerciseYoutubeVideos = async () => {
-        const data = await exercisesService.getYoutubeSearchExercise(
-          exerciseDetails.name
-        );
-        setExerciseYoutubeVideos(data.items);
-      };
-      getExerciseYoutubeVideos();
-    }
-  }, [exerciseDetails.name, id]);
+    const getExerciseDetails = async () => {
+      const data = await exercisesService.getExerciseById(id, token);
+      const youtubeSearch = await exercisesService.getYoutubeSearchExercise(
+        data.name
+      );
+      setExerciseYoutubeVideos(youtubeSearch.items);
+      setExerciseDetails(data);
+    };
+    const getSimilarExercises = async () => {
+      const data = await exercisesService.getSimilarExercises(token, id);
+      setSimilarExercises(data);
+    };
+    getExerciseDetails();
+    getSimilarExercises();
+  }, [id]);
 
   return (
     <div>
       <ExerciseDetail exerciseDetails={exerciseDetails} />
+      <SimilarExercises similarExercises={similarExercises} />
       <ExerciseYoutubeVideos
         exerciseYoutubeVideos={exerciseYoutubeVideos}
         name={exerciseDetails.name}
       />
-      <SimilarExercises />
     </div>
   );
 };

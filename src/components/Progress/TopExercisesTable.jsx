@@ -18,11 +18,11 @@ const TopExercisesTable = ({ topExercises }) => {
   };
 
   return (
-    <div className="overflow-auto bg-white rounded-lg border border-black shadow hidden md:block">
+    <div className="overflow-auto bg-white rounded-lg border border-black shadow">
       <table className="w-full bg-white">
         <thead>
           <tr>
-            <th colSpan={2} className="bg-white whitespace-nowrap">
+            <th colSpan={3} className="bg-white whitespace-nowrap">
               Your Favourite Exercises
             </th>
           </tr>
@@ -32,6 +32,9 @@ const TopExercisesTable = ({ topExercises }) => {
             </th>
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
               Name
+            </th>
+            <th className="p-3 text-sm font-semibold tracking-wide text-left">
+              Frequency
             </th>
           </tr>
         </thead>
@@ -45,12 +48,15 @@ const TopExercisesTable = ({ topExercises }) => {
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap ">
                   <div className="flex justify-left items-center gap-2">
                     <Link
-                      to="/exercises"
+                      to={`/exercises/${te.id}`}
                       className="font-bold text-black hover:underline"
                     >
-                      {te}
+                      {te.name}
                     </Link>
                   </div>
+                </td>
+                <td className="p-3 text-sm text-gray-700 whitespace-nowrap ">
+                  {te.frequency}
                 </td>
               </tr>
             );

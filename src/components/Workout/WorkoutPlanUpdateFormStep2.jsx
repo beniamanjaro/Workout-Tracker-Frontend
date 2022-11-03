@@ -72,7 +72,7 @@ const CreateWorkoutForm = ({
       };
     });
 
-    handleUpdateWorkoutPlan(routinesForApi);
+    handleUpdateWorkoutPlan(routinesForApi, data.routines.length);
     setCreateWorkoutFormActive(false);
     notify();
     setFormData({
@@ -100,9 +100,9 @@ const CreateWorkoutForm = ({
     setStep(step - 1);
   };
 
-  const handleUpdateWorkoutPlan = async (routinesForApi) => {
+  const handleUpdateWorkoutPlan = async (routinesForApi, timesPerWeek) => {
     const details = await workoutPlansService.updateWorkoutPlan(
-      { ...formData, routines: routinesForApi },
+      { ...formData, timesPerWeek: timesPerWeek, routines: routinesForApi },
       id,
       token
     );
@@ -126,7 +126,7 @@ const CreateWorkoutForm = ({
 
         <div className="flex">
           <button
-            className="z-50 bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            className="bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
             disabled={step === 1 ? true : false}
             onClick={handlePreviousStep}
           >
@@ -135,7 +135,7 @@ const CreateWorkoutForm = ({
 
           <button
             type="submit"
-            className="z-50 bg-green-500 hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            className="bg-green-500 hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Update Workout
           </button>

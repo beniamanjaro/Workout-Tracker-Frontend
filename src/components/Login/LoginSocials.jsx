@@ -14,7 +14,7 @@ import loginService from "../../services/login";
 
 const LoginSocials = () => {
   const [disabled, setDisabled] = useState(false);
-  const { user, loading, error, dispatch } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext);
   const navigator = useNavigate();
 
   const handleCallbackResponse = async (response) => {
@@ -57,7 +57,7 @@ const LoginSocials = () => {
 
   return (
     <div className="flex flex-1 lg:flex-col items-center">
-      <button type="submit">
+      {/* <button type="submit">
         <Link to="/login" className="relative inline-block text-lg group">
           <span className="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-black transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
             <span className="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-pink-500"></span>
@@ -89,7 +89,7 @@ const LoginSocials = () => {
             data-rounded="rounded-lg"
           ></span>
         </Link>
-      </button>
+      </button> */}
       <button type="submit">
         <Link
           to=""

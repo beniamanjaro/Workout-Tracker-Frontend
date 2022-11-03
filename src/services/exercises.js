@@ -79,6 +79,19 @@ const getAllExercises = async (token, pageNumber) => {
   return res.data;
 };
 
+const getSimilarExercises = async (token, exerciseId) => {
+  const res = await axios.get(
+    `${baseUrl}/${exerciseId}/similar-exercises`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 const getApiExercises = async () => {
   const res = await axios.get(
     `https://exercisedb.p.rapidapi.com/exercises`,
@@ -134,4 +147,5 @@ export default {
   getExercisesByCategory,
   getExercisesNames,
   getYoutubeSearchExercise,
+  getSimilarExercises,
 };

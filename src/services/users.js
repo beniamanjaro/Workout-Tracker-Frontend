@@ -47,4 +47,23 @@ const subscribeToWorkoutPlan = async (userId, workoutPlanId, token) => {
   return res.data;
 };
 
-export default { getUserById, subscribeToWorkoutPlan, getHistoryByTimeframe };
+const unSubscribeFromWorkoutPlan = async (userId, workoutPlanId, token) => {
+  const res = await axios.put(
+    `${baseUrl}/${userId}/workout-plans/unsubscribe?workoutPlanId=${workoutPlanId}`,
+    "",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
+export default {
+  getUserById,
+  subscribeToWorkoutPlan,
+  getHistoryByTimeframe,
+  unSubscribeFromWorkoutPlan,
+};

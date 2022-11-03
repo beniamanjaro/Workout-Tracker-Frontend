@@ -35,7 +35,7 @@ const Exercises = () => {
   const fetchMoreExercises = async () => {
     if (!searchValue && category === "all") {
       setPageNumber(pageNumber + 1);
-      const res = await exercisesService.getAllExercises(token, pageNumber);
+      const res = await exercisesService.getAllExercises(token, pageNumber + 1);
       setExercises(exercises.concat(res.data));
     }
     if (category !== "all") {

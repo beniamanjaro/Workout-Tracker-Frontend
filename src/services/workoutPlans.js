@@ -40,6 +40,26 @@ const getWorkoutPlanMuscleSplitStats = async (id, token) => {
   return res.data;
 };
 
+const getWorkoutPlansBySearch = async (
+  searchValue,
+  sortBy,
+  pageNumber,
+  pageSize,
+  timesPerWeek,
+  token
+) => {
+  const res = await axios.get(
+    `${baseUrl}/search?searchValue=${searchValue}&SortBy=${sortBy}&TimesPerWeekFilter=${timesPerWeek}&PageNumber=${pageNumber}&PageSize=${pageSize}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 const deleteWorkoutPlanById = async (id, token) => {
   const res = await axios.delete(
     `${baseUrl}/${id}`,
@@ -88,4 +108,5 @@ export default {
   deleteWorkoutPlanById,
   getWorkoutPlanMuscleSplitStats,
   getTopUsersForWorkoutPlanById,
+  getWorkoutPlansBySearch,
 };

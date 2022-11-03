@@ -78,8 +78,6 @@ const Workouts = () => {
     handleGetExercisesNames();
   }, [userId, token, dispatch]);
 
-  console.log(workoutPlans);
-
   const getCurrentStepForm = () => {
     switch (step) {
       case 1:
@@ -161,7 +159,7 @@ const Workouts = () => {
                 ""
               )
             )}
-          Subscribed To
+          <h4 className="text-2xl self-start ">Subscribed To</h4>
           {workoutPlans
             ?.filter((wp) => wp.userId !== userId)
             .map((wp) => (

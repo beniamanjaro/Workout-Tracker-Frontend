@@ -10,7 +10,7 @@ const Pagination = ({
   onNextClick,
   onPageChange,
 }) => {
-  const totalPages = response.totalPages - 1;
+  const totalPages = response.totalPages;
   const data = response.data;
   const handlePrevClick = () => {
     onPrevClick();
@@ -76,7 +76,7 @@ const Pagination = ({
           <button
             className="py-2 px-3 leading-tight text-gray-500 bg-white border border-black hover:bg-gray-100 hover:text-gray-700"
             onClick={handlePrevClick}
-            disabled={currentPage === pages[0]}
+            disabled={currentPage === pages[0] || !pages[0]}
           >
             Prev
           </button>
@@ -88,7 +88,7 @@ const Pagination = ({
           <button
             className="py-2 px-3 leading-tight text-gray-500 bg-white border border-black hover:bg-gray-100 hover:text-gray-700"
             onClick={handleNextClick}
-            disabled={currentPage === pages[pages.length - 1]}
+            disabled={currentPage === pages[pages.length - 1] || !pages[0]}
           >
             Next
           </button>

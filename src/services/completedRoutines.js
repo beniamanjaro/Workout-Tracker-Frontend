@@ -41,13 +41,28 @@ const getCompletedRoutinesByUserId = async (id, token) => {
   return res.data;
 };
 
+const getMuscleSplitForCompletedRoutine = async (id, token) => {
+  const res = await axios.get(
+    `${baseUrl}/${id}/muscle-split`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 const getCompletedRoutinesByUserByWorkoutPlan = async (
   userId,
   workoutPlanId,
-  token
+  token,
+  pageNumber,
+  pageSize
 ) => {
   const res = await axios.get(
-    `${baseUrl}/users/${userId}/workout-plans/${workoutPlanId}`,
+    `${baseUrl}/users/${userId}/workout-plans/${workoutPlanId}?PageNumber=${pageNumber}&PageSize=${pageSize}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -63,4 +78,5 @@ export default {
   getCompletedRoutinesByUserId,
   getCompletedRoutineById,
   getCompletedRoutinesByUserByWorkoutPlan,
+  getMuscleSplitForCompletedRoutine,
 };
