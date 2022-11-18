@@ -41,7 +41,11 @@ const Progress = () => {
         userId,
         token
       );
-      setMuscleSplit(data);
+      let object = data.reduce(
+        (obj, item) => Object.assign(obj, { [item.key]: item.value }),
+        {}
+      );
+      setMuscleSplit(object);
     };
     const getTopThreeUsedWorkoutPlans = async () => {
       const data = await analyticsService.getTopUsedWorkoutPlans(

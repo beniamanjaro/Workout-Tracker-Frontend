@@ -6,15 +6,18 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import { WorkoutPlansContextProvider } from "./context/WorkoutPlansContext";
+import { HamburgerMenuContextProvider } from "./context/HamburgerMenuContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthContextProvider>
     <WorkoutPlansContextProvider>
-      <Router>
-        <ToastContainer />
-        <App />
-      </Router>
+      <HamburgerMenuContextProvider>
+        <Router>
+          <ToastContainer />
+          <App />
+        </Router>
+      </HamburgerMenuContextProvider>
     </WorkoutPlansContextProvider>
   </AuthContextProvider>
 );

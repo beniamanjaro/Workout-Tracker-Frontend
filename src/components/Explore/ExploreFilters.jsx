@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import Select from "react-select";
+import { AiOutlineFilter } from "react-icons/ai";
 import { AuthContext } from "../../context/AuthContext";
 import workoutPlansService from "../../services/workoutPlans";
 
@@ -66,14 +67,18 @@ const ExploreFilters = ({ setWorkoutPlans }) => {
   };
 
   return (
-    <div className="flex-col justify-center items-center">
-      <div className="flex justify-center items-center">
+    <div className="flex-col justify-center items-center w-full">
+      <div className="justify-center items-center hidden sm:flex">
         <p>times per week: &nbsp;</p>
         <Select
           options={selectOptions}
           onChange={handleChangeSelectTimesPerWeek}
           placeholder={searchValue.get("timesPerWeek") || "Select"}
         />
+      </div>
+      <div className="flex sm:hidden justify-center items-center bg-white w-full h-12 border-2 border-black">
+        <p className="text-xl">Filter</p>
+        <AiOutlineFilter className="w-6 h-6" />
       </div>
     </div>
   );

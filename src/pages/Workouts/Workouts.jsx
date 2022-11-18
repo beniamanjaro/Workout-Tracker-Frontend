@@ -11,10 +11,12 @@ import SpinningLoader from "../../components/SpinningLoader";
 import { toast } from "react-toastify";
 import { WorkoutPlansContext } from "../../context/WorkoutPlansContext";
 import {
+  DISABLE_HAMBURGER_MENU,
   WORKOUT_PLANS_FAIL,
   WORKOUT_PLANS_REQUEST,
   WORKOUT_PLANS_SUCCESS,
 } from "../../context/actionTypes";
+import { HamburgerMenuContext } from "../../context/HamburgerMenuContext";
 
 const Workouts = () => {
   const [userDetails, setUserDetails] = useState({});
@@ -24,6 +26,7 @@ const Workouts = () => {
   const {
     user: { userId, token },
   } = useContext(AuthContext);
+  const dispatchHambuerMenu = useContext(HamburgerMenuContext).dispatch;
 
   const { workoutPlans, dispatch, loading } = useContext(WorkoutPlansContext);
   const [formData, setFormData] = useState({
@@ -51,6 +54,11 @@ const Workouts = () => {
       label: e.name,
     };
   });
+
+  const handleCreateNewWorkout = () => {
+    dispatchHambuerMenu({ type: DISABLE_HAMBURGER_MENU });
+    setCreateWorkoutFormActive(true);
+  };
 
   useEffect(() => {
     const handleGetUserById = async () => {
@@ -115,7 +123,7 @@ const Workouts = () => {
       ) : (
         <div className=" flex flex-col gap-2 justify-center items-center mt-24 w-full">
           <button
-            onClick={() => setCreateWorkoutFormActive(true)}
+            onClick={handleCreateNewWorkout}
             className="bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Create New WorkoutPlan

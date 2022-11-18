@@ -24,8 +24,12 @@ import TopUsersTable from "../../components/Workout/TopUsersTable";
 import SpinningLoader from "../../components/SpinningLoader";
 import HistoryRoutineCard from "../../components/Routine/HistoryRoutineCard";
 import { WorkoutPlansContext } from "../../context/WorkoutPlansContext";
-import { REMOVE_WORKOUT_PLAN } from "../../context/actionTypes";
+import {
+  DISABLE_HAMBURGER_MENU,
+  REMOVE_WORKOUT_PLAN,
+} from "../../context/actionTypes";
 import Modal from "../../components/Workout/WorkoutDeleteModal";
+import { HamburgerMenuContext } from "../../context/HamburgerMenuContext";
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -76,6 +80,7 @@ const Workout = () => {
   });
 
   const { dispatch } = useContext(WorkoutPlansContext);
+  const dispatchHamburgerMenu = useContext(HamburgerMenuContext).dispatch;
 
   const navigate = useNavigate();
 
@@ -175,6 +180,7 @@ const Workout = () => {
   };
 
   const handleShowForm = () => {
+    dispatchHamburgerMenu({ type: DISABLE_HAMBURGER_MENU });
     setCreateWorkoutFormActive(true);
     setFormData({
       userId: workoutPlanDetails.userId,
@@ -368,6 +374,7 @@ const Workout = () => {
                     <button
                       onClick={() => {
                         setCompleteRoutineActive(true);
+                        dispatchHamburgerMenu({ type: DISABLE_HAMBURGER_MENU });
                         setRoutineData(r);
                       }}
                       className="bg-white border border-black"

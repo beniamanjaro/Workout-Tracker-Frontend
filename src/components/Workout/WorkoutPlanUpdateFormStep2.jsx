@@ -7,19 +7,71 @@ import workoutPlansService from "../../services/workoutPlans";
 import * as yup from "yup";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import { HamburgerMenuContext } from "../../context/HamburgerMenuContext";
+import { ENABLE_HAMBURGER_MENU } from "../../context/actionTypes";
+import { get, isEmpty } from "lodash";
+
+//Got the code for the unique properties from here => https://github.com/jquense/yup/issues/345
+const uniquePropertyTest = function (value, propertyName, message) {
+  if (
+    this.parent
+      .filter((v) => v !== value)
+      .some((v) => get(v, propertyName) === get(value, propertyName))
+  ) {
+    throw this.createError({
+      path: `${this.path}.${propertyName}`,
+      message,
+    });
+  }
+
+  return true;
+};
+yup.addMethod(yup.object, "uniqueProperty", function (propertyName, message) {
+  return this.test("unique", message, function (value) {
+    return uniquePropertyTest.call(this, value, propertyName, message);
+  });
+});
+yup.addMethod(yup.object, "uniqueProperties", function (propertyNames) {
+  return this.test("unique", "", function (value) {
+    const errors = propertyNames
+      .map(([propertyName, message]) => {
+        try {
+          return uniquePropertyTest.call(this, value, propertyName, message);
+        } catch (error) {
+          return error;
+        }
+      })
+      .filter((error) => error instanceof yup.ValidationError);
+
+    if (!isEmpty(errors)) {
+      throw new yup.ValidationError(errors);
+    }
+
+    return true;
+  });
+});
 
 const schema = yup
   .object({
     routines: yup.array(
-      yup.object({
-        name: yup.string().required(),
-        exercises: yup.array(
-          yup.object({
-            name: yup.number().required(),
-            sets: yup.string().required(),
-          })
-        ),
-      })
+      yup
+        .object({
+          name: yup.string().required(),
+          dayOrderNumber: yup.number().min(1).max(7).required(),
+          exercises: yup.array(
+            yup.object({
+              name: yup.number().required(),
+              sets: yup.string().required(),
+            })
+          ),
+        })
+        .uniqueProperties([
+          ["name", "name must be unique"],
+          [
+            "dayOrderNumber",
+            "routine day order must be unique and between 1 and 7",
+          ],
+        ])
     ),
   })
   .required();
@@ -38,6 +90,7 @@ const CreateWorkoutForm = ({
   const defaultValues = {
     routines: formData.routines,
   };
+  const { isHamburgerMenuVisible, dispatch } = useContext(HamburgerMenuContext);
 
   const {
     user: { token },
@@ -53,6 +106,7 @@ const CreateWorkoutForm = ({
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues,
+    mode: "onBlur",
   });
 
   const onSubmit = (data) => {
@@ -71,6 +125,9 @@ const CreateWorkoutForm = ({
         workoutSets: workoutSetsTemp,
       };
     });
+    if (!isHamburgerMenuVisible) {
+      dispatch({ type: ENABLE_HAMBURGER_MENU });
+    }
 
     handleUpdateWorkoutPlan(routinesForApi, data.routines.length);
     setCreateWorkoutFormActive(false);
@@ -109,6 +166,10 @@ const CreateWorkoutForm = ({
     setWorkoutPlanDetails(details);
   };
 
+  const handleCloseForm = () => {
+    dispatch({ type: ENABLE_HAMBURGER_MENU });
+    setCreateWorkoutFormActive(false);
+  };
   return (
     <>
       <h1 className="text-center text-3xl mt-8 underline decoration-black">
@@ -141,10 +202,7 @@ const CreateWorkoutForm = ({
           </button>
         </div>
       </form>
-      <button
-        className="fixed top-0 right-0 z-50"
-        onClick={() => setCreateWorkoutFormActive(false)}
-      >
+      <button className="fixed top-0 right-0 z-50" onClick={handleCloseForm}>
         <AiOutlineClose className="text-black w-10 h-10 m-2" />
       </button>
     </>

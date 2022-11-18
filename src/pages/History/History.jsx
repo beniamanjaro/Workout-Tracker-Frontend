@@ -23,15 +23,15 @@ const History = () => {
 
   useEffect(() => {
     const handleGetCompletedRoutines = async () => {
-      const data = await usersService.getHistoryByTimeframe(
+      const result = await usersService.getHistoryByTimeframe(
         userId,
         3,
         token,
         1,
         40
       );
-      setCompletedRoutines(data.data);
-      if (data.data.length === 0) {
+      setCompletedRoutines(result.data);
+      if (result.data.length === 0) {
         setNoDataAvailable(true);
       } else {
         setNoDataAvailable(false);
@@ -76,14 +76,14 @@ const History = () => {
 
   const handleChangeTimeframe = async (e) => {
     setTimeFrame(e.value);
-    const data = await usersService.getHistoryByTimeframe(
+    const result = await usersService.getHistoryByTimeframe(
       userId,
       e.value,
       token,
       1,
       40
     );
-    setCompletedRoutines(data.data);
+    setCompletedRoutines(result.data);
   };
 
   return (

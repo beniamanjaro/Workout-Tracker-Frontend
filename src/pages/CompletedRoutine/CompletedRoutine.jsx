@@ -50,7 +50,11 @@ const CompletedRoutine = () => {
           id,
           token
         );
-      setMuscleSplit(data);
+      let object = data.reduce(
+        (obj, item) => Object.assign(obj, { [item.key]: item.value }),
+        {}
+      );
+      setMuscleSplit(object);
     };
     getMuscleSplitForCompletedRoutine();
     getCompletedRoutineData();

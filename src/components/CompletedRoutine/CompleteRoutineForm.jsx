@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import FieldArray from "./FieldArray";
@@ -8,6 +8,9 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { HamburgerMenuContext } from "../../context/HamburgerMenuContext";
+import { ENABLE_HAMBURGER_MENU } from "../../context/actionTypes";
+import { useEffect } from "react";
 
 const CompletedRoutineForm = ({
   setCompleteRoutineActive,
@@ -20,18 +23,16 @@ const CompletedRoutineForm = ({
   setWorkoutPlanData,
   visitingUserDetails,
 }) => {
-  const defaultValues = {
-    exercises,
-  };
-
+  const [exercisesStats, setExercisesStats] = useState(exercises);
   const {
-    user: { token },
+    user: { userId, token },
   } = useContext(AuthContext);
+  const { isHamburgerMenuVisible, dispatch } = useContext(HamburgerMenuContext);
 
   const validateSchema = Yup.object().shape({
     exercises: Yup.array().of(
       Yup.object().shape({
-        weight: Yup.number().required().positive().integer(),
+        weight: Yup.number().required().positive(),
         numberOfReps: Yup.number().required().positive().integer(),
       })
     ),
@@ -40,7 +41,6 @@ const CompletedRoutineForm = ({
   const formOptions = {
     resolver: yupResolver(validateSchema),
     mode: "onChange",
-    defaultValues: { exercises },
   };
 
   const {
@@ -48,49 +48,18 @@ const CompletedRoutineForm = ({
     register,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors },
     setValue,
   } = useForm(formOptions);
 
   const onSubmit = async (formData) => {
+    console.log(formData);
     const formDataExercises = formData.exercises;
-    // const workoutSets = convertExercisesToWorkoutSets(formDataExercises);
 
-    // const routines = workoutPlanData.routines.filter(
-    //   (r) => r.id !== routineData.id
-    // );
-
-    // const updatedRoutines = [
-    //   ...routines,
-    //   {
-    //     ...routineData,
-    //     workoutSets,
-    //   },
-    // ];
     const completedRoutineData =
       getCompletedRoutineDataFromExercises(formDataExercises);
 
-    // const modified = updatedRoutines.map((r) => {
-    //   let updatedWorkoutSets = [];
-    //   r.workoutSets.map((ws) => {
-    //     let sets = [];
-    //     ws.sets.forEach((s) => {
-    //       sets.push({
-    //         exerciseId: s.exercise.id,
-    //         numberOfReps: s.numberOfReps,
-    //         weight: s.weight,
-    //       });
-    //     });
-    //     return updatedWorkoutSets.push({ sets });
-    //   });
-    //   return {
-    //     name: r.name,
-    //     dayOrderNumber: r.dayOrderNumber,
-    //     workoutSets: updatedWorkoutSets,
-    //   };
-    // });
-    // console.log("modified", modified);
-    // console.log("test", updatedRoutines);
     const addedCompletedRoutine = await handleCompleteRoutine({
       ...completedRoutineData,
       routineName: routineData.name,
@@ -99,12 +68,11 @@ const CompletedRoutineForm = ({
       addedCompletedRoutine,
       ...recentCompletedRoutines,
     ]);
+    if (!isHamburgerMenuVisible) {
+      dispatch({ type: ENABLE_HAMBURGER_MENU });
+    }
     notifySuccess();
     setCompleteRoutineActive(false);
-    // handleUpdateWorkoutPlan(modified);
-    // setCompleteRoutineActive(false);
-    // console.log("routines", routines);
-    // console.log("workoutsets", workoutSets);
   };
 
   const getCompletedRoutineDataFromExercises = (exercises) => {
@@ -155,60 +123,34 @@ const CompletedRoutineForm = ({
     });
   };
 
-  // const convertExercisesToWorkoutSets = (exercises) => {
-  //   let workoutSets = [];
-  //   let workoutSetCount = 0;
-
-  //   const updateWorkoutSet = workoutPlanData.routines.filter(
-  //     (r) => r.id === routineData.id
-  //   )[0];
-
-  //   for (let i = 0; i <= exercises.length; i++) {
-  //     let temp = [];
-  //     if (exercises[i]) {
-  //       temp.push(exercises[i]);
-  //     }
-  //     while (
-  //       i < exercises.length - 1 &&
-  //       exercises[i].exercise.name === exercises[i + 1].exercise.name
-  //     ) {
-  //       temp.push(exercises[i + 1]);
-  //       i++;
-  //     }
-  //     if (temp.length !== 0) {
-  //       workoutSets.push({
-  //         sets: temp,
-  //         id: updateWorkoutSet.workoutSets[workoutSetCount].id,
-  //       });
-  //       workoutSetCount++;
-  //     }
-  //     temp = [];
-  //   }
-  //   return workoutSets;
-  // };
-
-  // const handleUpdateWorkoutPlan = async (routines) => {
-  //   console.log("formData", workoutPlanData);
-  //   console.log("token", token);
-  //   const details = await workoutPlansService.updateWorkoutPlan(
-  //     { ...workoutPlanData, routines },
-  //     id,
-  //     token
-  //   );
-  //   console.log("details", details);
-  //   setWorkoutPlanData(details);
-  // };
-
-  console.log(errors);
-
   const handleClick = () => {
     if (errors.exercises) {
       notifyError();
+      console.log(errors, "errors");
     }
+  };
+
+  const handleCloseForm = () => {
+    dispatch({ type: ENABLE_HAMBURGER_MENU });
+    setCompleteRoutineActive(false);
   };
 
   const handleCompleteRoutine = async (data) => {
     return await completeRoutineService.completeRoutine(data, token);
+  };
+
+  const handleAutoCompleteExercisesWithMostRecentStats = async () => {
+    const getMostRecentExercisesStatsForRoutine = async () => {
+      const data =
+        await completeRoutineService.getMostRecentCompletedRoutineExercisesStatsByUserByWorkoutPlanByName(
+          userId,
+          workoutPlanData.id,
+          routineData.name,
+          token
+        );
+      setExercisesStats(data);
+    };
+    getMostRecentExercisesStatsForRoutine();
   };
 
   return (
@@ -225,7 +167,7 @@ const CompletedRoutineForm = ({
           {...{
             control,
             register,
-            defaultValues,
+            exercisesStats,
             getValues,
             setValue,
             errors,
@@ -239,11 +181,14 @@ const CompletedRoutineForm = ({
           Complete Routine
         </button>
       </form>
-
       <button
-        className="fixed top-0 right-0 z-50"
-        onClick={() => setCompleteRoutineActive(false)}
+        onClick={handleAutoCompleteExercisesWithMostRecentStats}
+        className="z-50 bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
       >
+        Auto fill with last routine
+      </button>
+
+      <button className="fixed top-0 right-0 z-50" onClick={handleCloseForm}>
         <AiOutlineClose className="text-black w-10 h-10 m-2" />
       </button>
     </div>

@@ -1,5 +1,8 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { HamburgerMenuContext } from "../../context/HamburgerMenuContext";
+import { ENABLE_HAMBURGER_MENU } from "../../context/actionTypes";
 
 const WorkoutPlanDetailsStep = ({
   setCreateWorkoutFormActive,
@@ -22,12 +25,19 @@ const WorkoutPlanDetailsStep = ({
     handleNextStep();
   };
 
+  const { dispatch } = useContext(HamburgerMenuContext);
+
   const handleNextStep = () => {
     setStep(step + 1);
   };
 
   const handlePreviousStep = () => {
     setStep(step - 1);
+  };
+
+  const handleCloseForm = () => {
+    dispatch({ type: ENABLE_HAMBURGER_MENU });
+    setCreateWorkoutFormActive(false);
   };
 
   return (
@@ -43,7 +53,7 @@ const WorkoutPlanDetailsStep = ({
         >
           <div className="mb-6 relative">
             <input
-              className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-black appearance-none-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               id="workoutPlanName"
               {...register("name", {
                 required: true,
@@ -55,14 +65,14 @@ const WorkoutPlanDetailsStep = ({
             />
             <label
               for="workoutPlanName"
-              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+              className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
             >
               Workout Plan Name
             </label>
           </div>
           <div className="mb-6 relative">
             <input
-              className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-black appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-black appearance-none-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               id="timesPerWeek"
               {...register("timesPerWeek", {
                 required: true,
@@ -76,7 +86,7 @@ const WorkoutPlanDetailsStep = ({
             />
             <label
               for="timesPerWeek"
-              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
+              className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
             >
               Times per Week
             </label>
@@ -100,10 +110,7 @@ const WorkoutPlanDetailsStep = ({
         </form>
       </div>
 
-      <button
-        className="fixed top-0 right-0 z-50"
-        onClick={() => setCreateWorkoutFormActive(false)}
-      >
+      <button className="fixed top-0 right-0 z-50" onClick={handleCloseForm}>
         <AiOutlineClose className="text-black w-10 h-10 m-2" />
       </button>
     </div>

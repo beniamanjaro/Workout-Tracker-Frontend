@@ -31,10 +31,8 @@ const Explore = () => {
   }, []);
 
   return (
-    <div className="w-full">
-      <div>
-        <ExploreTop setWorkoutPlans={setWorkoutPlans} />
-      </div>
+    <div className="w-full h-full">
+      <ExploreTop setWorkoutPlans={setWorkoutPlans} />
       <ExploreBody workoutPlans={workoutPlans} />
     </div>
   );

@@ -5,22 +5,76 @@ import FieldArray from "./FieldArray";
 import { yupResolver } from "@hookform/resolvers/yup";
 import workoutPlansService from "../../services/workoutPlans";
 import * as yup from "yup";
+import { get, isEmpty } from "lodash";
 import { AuthContext } from "../../context/AuthContext";
 import { WorkoutPlansContext } from "../../context/WorkoutPlansContext";
-import { ADD_WORKOUT_PLAN } from "../../context/actionTypes";
+import {
+  ADD_WORKOUT_PLAN,
+  ENABLE_HAMBURGER_MENU,
+} from "../../context/actionTypes";
+import { HamburgerMenuContext } from "../../context/HamburgerMenuContext";
+
+//Got the code for the unique properties from here => https://github.com/jquense/yup/issues/345
+const uniquePropertyTest = function (value, propertyName, message) {
+  if (
+    this.parent
+      .filter((v) => v !== value)
+      .some((v) => get(v, propertyName) === get(value, propertyName))
+  ) {
+    throw this.createError({
+      path: `${this.path}.${propertyName}`,
+      message,
+    });
+  }
+
+  return true;
+};
+yup.addMethod(yup.object, "uniqueProperty", function (propertyName, message) {
+  return this.test("unique", message, function (value) {
+    return uniquePropertyTest.call(this, value, propertyName, message);
+  });
+});
+yup.addMethod(yup.object, "uniqueProperties", function (propertyNames) {
+  return this.test("unique", "", function (value) {
+    const errors = propertyNames
+      .map(([propertyName, message]) => {
+        try {
+          return uniquePropertyTest.call(this, value, propertyName, message);
+        } catch (error) {
+          return error;
+        }
+      })
+      .filter((error) => error instanceof yup.ValidationError);
+
+    if (!isEmpty(errors)) {
+      throw new yup.ValidationError(errors);
+    }
+
+    return true;
+  });
+});
 
 const schema = yup
   .object({
     routines: yup.array(
-      yup.object({
-        name: yup.string().required(),
-        exercises: yup.array(
-          yup.object({
-            name: yup.number().required(),
-            sets: yup.string().required(),
-          })
-        ),
-      })
+      yup
+        .object({
+          name: yup.string().required(),
+          dayOrderNumber: yup.number().min(1).max(7).required(),
+          exercises: yup.array(
+            yup.object({
+              name: yup.number().required(),
+              sets: yup.string().required(),
+            })
+          ),
+        })
+        .uniqueProperties([
+          ["name", "name must be unique"],
+          [
+            "dayOrderNumber",
+            "routine day order must be unique and between 1 and 7",
+          ],
+        ])
     ),
   })
   .required();
@@ -43,6 +97,8 @@ const CreateWorkoutForm = ({
   } = useContext(AuthContext);
 
   const { dispatch } = useContext(WorkoutPlansContext);
+  const dispatchHambuerMenu = useContext(HamburgerMenuContext).dispatch;
+  const { isHamburgerMenuVisible } = useContext(HamburgerMenuContext);
 
   const {
     control,
@@ -54,6 +110,7 @@ const CreateWorkoutForm = ({
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues,
+    mode: "onBlur",
   });
 
   const onSubmit = (data) => {
@@ -66,6 +123,10 @@ const CreateWorkoutForm = ({
         }
         return workoutSets2.push({ sets });
       });
+      if (!isHamburgerMenuVisible) {
+        dispatchHambuerMenu({ type: ENABLE_HAMBURGER_MENU });
+      }
+
       return {
         name: r.name,
         dayOrderNumber: r.dayOrderNumber,
@@ -97,6 +158,11 @@ const CreateWorkoutForm = ({
       type: ADD_WORKOUT_PLAN,
       payload: workout,
     });
+  };
+
+  const handleCloseForm = () => {
+    dispatchHambuerMenu({ type: ENABLE_HAMBURGER_MENU });
+    setCreateWorkoutFormActive(false);
   };
 
   return (
@@ -131,10 +197,7 @@ const CreateWorkoutForm = ({
           </button>
         </div>
       </form>
-      <button
-        className="fixed top-0 right-0 z-50"
-        onClick={() => setCreateWorkoutFormActive(false)}
-      >
+      <button className="fixed top-0 right-0 z-50" onClick={handleCloseForm}>
         <AiOutlineClose className="text-black w-10 h-10 m-2" />
       </button>
     </>

@@ -28,6 +28,20 @@ const getCompletedRoutineById = async (id, token) => {
   return res.data;
 };
 
+const getMostRecentCompletedRoutineExercisesStatsByUserByWorkoutPlanByName =
+  async (userId, workoutPlanId, routineName, token) => {
+    const res = await axios.get(
+      `${baseUrl}/users/${userId}/workout-plans/${workoutPlanId}/routines/${routineName}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+      { withCredentials: true }
+    );
+    return res.data;
+  };
+
 const getCompletedRoutinesByUserId = async (id, token) => {
   const res = await axios.get(
     `${baseUrl}/user?userId=${id}`,
@@ -79,4 +93,5 @@ export default {
   getCompletedRoutineById,
   getCompletedRoutinesByUserByWorkoutPlan,
   getMuscleSplitForCompletedRoutine,
+  getMostRecentCompletedRoutineExercisesStatsByUserByWorkoutPlanByName,
 };
